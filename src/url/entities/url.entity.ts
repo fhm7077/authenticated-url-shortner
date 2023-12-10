@@ -1,7 +1,5 @@
 /* eslint-disable prettier/prettier */
 
-
-// src/modules/url/url.entity.ts
 import { User } from 'src/users/entities/user.entity';
 import { Entity, Column, PrimaryGeneratedColumn, ManyToOne, JoinColumn } from 'typeorm';
 
@@ -17,11 +15,8 @@ export class Url {
   @Column()
   shortUrl: string;
 
-  @Column({ name: 'userId' })
-  userId: number;
-
-  // @ManyToOne(() => User, { referencedColumnName: 'id' })
-  // @JoinColumn({ name: 'userId' })
-  // user: User;
+  @ManyToOne(() => User, user => user.urls)
+  @JoinColumn({ name: 'userId' })
+  user: User;
 }
 

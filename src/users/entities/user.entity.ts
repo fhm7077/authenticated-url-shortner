@@ -1,6 +1,7 @@
 /* eslint-disable prettier/prettier */
 
-import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn} from 'typeorm';
+import { Url } from 'src/url/entities/url.entity';
+import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn, OneToMany} from 'typeorm';
 
 @Entity({ name: 'users' })
 export class User {
@@ -25,4 +26,6 @@ export class User {
   @UpdateDateColumn()
   updatedAt: Date;
 
+  @OneToMany(() => Url, url => url.user)
+  urls: Url[];
 }

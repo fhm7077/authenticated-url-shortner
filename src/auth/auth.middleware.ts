@@ -5,21 +5,22 @@ import { Request, Response, NextFunction } from 'express';
 import * as jwt from 'jsonwebtoken';
 
 @Injectable()
-export class AuthMiddleware implements NestMiddleware {
+export class JwtMiddleware implements NestMiddleware {
   use(req: Request, res: Response, next: NextFunction) {
-    const token = req.headers.authorization?.split(' ')[1];
+    const authHeader = req.headers.authorization;
 
-    if (!token) {
+    if (!authHeader || !authHeader.startsWith('Bearer ')) {
       return res.status(401).json({ message: 'Unauthorized - No token provided' });
     }
 
-    jwt.verify(token, 'secret-key', (err, decoded) => {
-      if (err) {
-        return res.status(401).json({ message: 'Unauthorized - Invalid token' });
-      }
-      // Attaching user information to the request object
-      req['user'] = decoded;
+    const token = authHeader.split(' ')[1];
+
+    try {
+      const decoded = jwt.verify(token, 'secret-key');
+      req['user'] = decoded; 
       next();
-    });
+    } catch (error) {
+      return res.status(401).json({ message: 'Unauthorized - Invalid token' });
+    }
   }
 }

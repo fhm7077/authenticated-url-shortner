@@ -1,5 +1,5 @@
 /* eslint-disable prettier/prettier */
-import { Injectable, ConflictException  } from '@nestjs/common';
+import { Injectable, ConflictException, BadRequestException  } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -37,13 +37,13 @@ export class UsersService {
     const user = await this.userRepository.findOne({ where: { email } });
 
     if (!user) {
-      return { message: 'Invalid username' };
+      throw new BadRequestException('Invalid username');
     }
-
+    
     const isPasswordValid = await bcrypt.compare(password, user.password);
-
+    
     if (!isPasswordValid) {
-      return { message: 'Invalid password' };
+      throw new BadRequestException('Invalid password');
     }
 
     const resp = {
