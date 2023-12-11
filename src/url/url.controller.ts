@@ -1,5 +1,5 @@
 /* eslint-disable prettier/prettier */
-import { Controller, Post, Body, UseGuards, Req, Get, Query,Res, NotFoundException } from '@nestjs/common';
+import { Controller, Post, Body, UseGuards, Req, Get, Query, Res, NotFoundException } from '@nestjs/common';
 import { UrlService } from './url.service';
 import { CreateUrlDto } from './dto/create-url.dto';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';

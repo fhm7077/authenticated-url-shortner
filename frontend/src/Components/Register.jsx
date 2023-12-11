@@ -8,16 +8,18 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import { styled } from '@mui/system';
+import { useNavigate } from 'react-router-dom';
+
 
 const StyledContainer = styled('div')({
   display: 'flex',
   flexDirection: 'column',
-  maxWidth: '350px',
+  maxWidth: '600px',
   margin: 'auto',
   marginTop: '20px',
   border: '1px solid #ddd',
   padding: '20px',
-  boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
+  boxShadow: '0 4px 8px rgba(0, 0, 255, 0.1)',
 });
 
 const StyledTextField = styled(TextField)({
@@ -40,7 +42,6 @@ const Register = () => {
 
   const [formData, setFormData] = useState(initialFormData);
   const [openPopup, setOpenPopup] = useState(false);
-
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData({
@@ -54,7 +55,9 @@ const Register = () => {
     window.location.href = '/login';
   };
 
+  const navigate = useNavigate();
   const handleSubmit = async (e) => {
+    navigate('/login');
     e.preventDefault();
     console.log('Handling submit...');
 
