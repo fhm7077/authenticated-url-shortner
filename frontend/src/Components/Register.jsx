@@ -55,9 +55,7 @@ const Register = () => {
     window.location.href = '/login';
   };
 
-  const navigate = useNavigate();
   const handleSubmit = async (e) => {
-    navigate('/login');
     e.preventDefault();
     console.log('Handling submit...');
 
@@ -82,7 +80,7 @@ const Register = () => {
       <form onSubmit={handleSubmit}>
         <StyledTextField
           label="Email"
-          type="text"
+          type="email"
           name="email"
           value={formData.email}
           onChange={handleChange}
