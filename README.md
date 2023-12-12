@@ -18,8 +18,8 @@
     - [URL Management](#url-management)
     - [Styling](#styling)
     - [Interacting with the UI](#interacting-with-the-ui)
-  - [Special Considerations](#special-considerations-1)
-    - [AI-Assisted Development Tool](#ai-assisted-development-with-chatgpt)
+  - [Special Considerations](#special-considerations)
+    - [AI-Assisted Development Tool](#ai-assisted-development-tool)
 
 ## Introduction
 This project is an authenticated URL shortener implemented using Nest.js for the backend and React for the frontend. The backend includes secure user authentication, hashed password storage, token-based authentication using JWT, and URL shortening routes accessible only to authenticated users. On the simple frontend, React, along with CSS, is utilized to create a user-friendly interface for seamless interaction with the URL shortening application. Users can register, log in, and access URL shortening features in a responsive and dynamic web environment.
