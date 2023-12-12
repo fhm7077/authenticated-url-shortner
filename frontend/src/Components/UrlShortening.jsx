@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Button, TextField, Typography } from '@mui/material';
 import { styled } from '@mui/system';
 import CopyToClipboard from 'react-copy-to-clipboard';
@@ -60,11 +60,15 @@ const UrlShortening = () => {
           originalUrl: inputUrl,
         }),
       });
-
-      const data = await response.json();
-
-      // Handle the response data accordingly
-      setShortenedUrl(data.shortUrl);
+      if (response.ok) {
+        const data = await response.json();
+        setShortenedUrl(data.shortUrl);
+      } else if (response.status === 409) {
+        const errorData = await response.json();
+        alert(`${errorData.message}`);
+      } else {
+        console.error('Error:', response.statusText);
+      }
     } catch (error) {
       console.error('Error:', error);
     }
@@ -72,13 +76,15 @@ const UrlShortening = () => {
 
   return (
     <StyledContainer>
+      <h1>URL Shortening</h1>
       <div>
         <form onSubmit={handleSubmit}>
           <StyledTextField
             label="Original URL:"
-            type="text"
+            type="URL"
             value={inputUrl}
             onChange={(e) => setInputUrl(e.target.value)}
+            required
           />
           <StyledButton type="submit" variant="contained" color="primary">
             Shorten URL

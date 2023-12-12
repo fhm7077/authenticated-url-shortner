@@ -1,10 +1,9 @@
 /* eslint-disable prettier/prettier */
-import { Injectable, NotFoundException, ConflictException } from '@nestjs/common';
+import { Injectable, ConflictException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { CreateUrlDto } from './dto/create-url.dto';
 import { Url } from './entities/url.entity';
-import { User } from '../users/entities/user.entity';
 import { createHash } from 'crypto';
 
 
@@ -26,44 +25,65 @@ export class UrlService {
     if (existingUrl) {
       throw new ConflictException('URL already exists');
     }
-    // Get user ID from the token
+    //user ID from the token
     const userId = req.user.id;
 
-    // Generate a short URL using nanoid
     const shortUrl = this.generateShortUrl(originalUrl);
 
-    // Create a new URL entity
     const url = this.urlRepository.create({
       originalUrl,
       shortUrl,
       user: { id: userId },
     });
 
-    // Save the URL to the database
     await this.urlRepository.save(url);
 
     return url;
   }
 
+  //create custom url
+  async createCustom(createUrlDto: CreateUrlDto, req: any): Promise<Url> {
+    const { originalUrl, customUrl } = createUrlDto;
+    // Check if the custom URL already exists
+    const existingUrl = await this.urlRepository.findOne({
+      where: { shortUrl: `https://short-url/${customUrl}` },
+    });
+
+    if (existingUrl) {
+      throw new ConflictException('Custom URL already exists');
+    }
+
+    const userId = req.user.id;
+
+    // Customize the short URL 
+    const shortUrl = `https://short-url/${customUrl}`;
+
+    const url = this.urlRepository.create({
+      originalUrl,
+      shortUrl,
+      user: { id: userId },
+    });
+
+    await this.urlRepository.save(url);
+
+    return url;
+  }
+  
   private generateShortUrl(originalUrl: string): string {
-    // hash of the original URL using sha256 algorithm 
+
     const hash = createHash('sha256').update(originalUrl).digest('hex').slice(0, 8);
   
-    // Customize the short URL format as needed
     const shortUrl = `https://short-url/${hash}`;
   
     return shortUrl;
   }
+  
 
-  async findAll(): Promise<Url[]> {
-    return this.urlRepository.find();
+  async findAll(userId: number): Promise<Url[]> {
+    return this.urlRepository.find({ where: { user: { id: userId } } });
   }
   async findOneByShortUrl(shortUrl: string): Promise<Url | undefined> {
     return this.urlRepository.findOne({ where: { shortUrl } });
   }
 }
 
-//   findAll() {
-//     return `This action returns all url`;
-//   }
-// }

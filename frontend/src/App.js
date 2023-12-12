@@ -8,7 +8,10 @@ import UrlShortening from './Components/UrlShortening';
 import './styles.css';
 import { Button, List, ListItem, Drawer, Typography, ListItemText } from '@mui/material';
 import { styled } from '@mui/system';
-import { useHistory } from 'react-router-dom';
+import RedirectUrl from './Components/RedirectUrl';
+import CustomURL from './Components/CustomURL';
+import MyURLs from './Components/MyURLs';
+import MyProfile from './Components/MyProfile';
 const drawerWidth = 240;
 
 const Sidebar = styled(Drawer)({
@@ -69,7 +72,7 @@ const App = () => {
                 </Button>
               </ListItem>
               <ListItem>
-                <Button component={Link} to='/register' color='inherit' variant='outlined'>
+                <Button component={Link} to='/register' color='inherit' variant='outlined' disabled={token !== null}>
                   Register
                 </Button>
               </ListItem>
@@ -90,6 +93,9 @@ const App = () => {
             <StyledSidebarItem component={Link} to="/url-shortening" button>
               <StyledSidebarText primary="URL Shortening" />
             </StyledSidebarItem>
+            <StyledSidebarItem component={Link} to="/redirect-url" button>
+              <StyledSidebarText primary="Redirect URL" />
+            </StyledSidebarItem>
             <StyledSidebarItem component={Link} to="/custom-url" button>
               <StyledSidebarText primary="Custom URL" />
             </StyledSidebarItem>
@@ -108,6 +114,10 @@ const App = () => {
             <Route path='/login' element={<Login />} />
             <Route path='/register' element={<Register />} />
             <Route path='/url-shortening' element={<UrlShortening />} />
+            <Route path='/redirect-url' element={<RedirectUrl />} />
+            <Route path='/custom-url' element={<CustomURL/>} />
+            <Route path='/my-urls' element={<MyURLs/>} />
+            <Route path='/my-profile' element={<MyProfile/>} />
             <Route path='/' element={<Home />} />
           </Routes>
         </div>

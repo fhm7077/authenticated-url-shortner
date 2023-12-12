@@ -1,7 +1,11 @@
-import { IsUrl, IsNotEmpty } from 'class-validator';
+import { IsString, IsNotEmpty } from 'class-validator';
 
 export class CreateUrlDto {
-  @IsNotEmpty({ message: 'Original URL cannot be empty' })
-  @IsUrl({}, { message: 'Invalid URL format' })
-  readonly originalUrl: string;
+  @IsNotEmpty()
+  @IsString()
+  originalUrl: string;
+
+  @IsNotEmpty()
+  @IsString()
+  customUrl: string;
 }

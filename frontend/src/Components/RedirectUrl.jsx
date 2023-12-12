@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { Button, TextField, Typography } from '@mui/material';
 import { styled } from '@mui/system';
-import CopyToClipboard from 'react-copy-to-clipboard';
 
 const StyledContainer = styled('div')({
   display: 'flex',
@@ -23,54 +22,43 @@ const StyledButton = styled(Button)({
   display: 'block',
 });
 
-const UrlShortening = () => {
-  const [shortenedUrl, setShortenedUrl] = useState('');
+const RedirectUrl = () => {
+  const [originalUrl, setOriginalUrl] = useState('');
   const [inputUrl, setInputUrl] = useState('');
-  const [inputUrlCustom, setInputUrlCustom] = useState('');
 
-  const [isCopied, setIsCopied] = useState(false);
-
-  const handleCopy = () => {
-    setIsCopied(true);
-    // Reset the copy state after 3 seconds
-    setTimeout(() => {
-      setIsCopied(false);
-    }, 3000);
+  const handleOpen = () => {
+    // Open the original URL in a new tab or window
+    window.open(originalUrl, '_blank');
   };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // Get the token from local storage
-    const token = localStorage.getItem('authToken');
-
-    // Make sure there is a token
-    if (!token) {
-      alert('Login to use URL Shortening');
-      console.error('No token found');
-      return;
-    }
-
     try {
-      // Make the API request with the token in the headers
+      // Make the API request to get the original URL
       const response = await fetch(
-        `http://localhost:4000/url/short-url-custom?originalUrl=${inputUrl}&customUrl=${inputUrlCustom}`,
+        `http://localhost:4000/url/redirect?shortUrl=${inputUrl}`,
         {
-          method: 'POST',
+          method: 'GET',
           headers: {
             'Content-Type': 'application/json',
-            Authorization: `Bearer ${token}`,
-          }
+          },
         },
       );
+
       if (response.ok) {
         const data = await response.json();
-        // Handle the response data accordingly
-        setShortenedUrl(data.shortUrl);
-      } else if (response.status === 409) {
-        const errorData = await response.json();
-        alert(`${errorData.message}`);
+        // Set the original URL in state
+        setOriginalUrl(data.originalUrl);
       } else {
-        console.error('Error:', response.statusText);
+        const errorData = await response.json();
+        if (response.status === 404 && errorData.message === 'Shortened URL not found') {
+            // Handle 404 error for Shortened URL not found
+            alert('Shortened URL not found. Please check the URL and try again.');
+          } else {
+            // Handle other errors
+            console.error('Error:', response.status, errorData.message);
+          }
       }
     } catch (error) {
       console.error('Error:', error);
@@ -79,29 +67,22 @@ const UrlShortening = () => {
 
   return (
     <StyledContainer>
-      <h1>URL Shortening</h1>
+      <h1>Get original URL</h1>
       <div>
         <form onSubmit={handleSubmit}>
           <StyledTextField
-            label="Original URL:"
-            type="URL"
+            label="Shortened URL:"
+            type="text"
             value={inputUrl}
             onChange={(e) => setInputUrl(e.target.value)}
             required
           />
-          <StyledTextField
-            label="Custom URL: (https://short-url/)"
-            type="text"
-            value={inputUrlCustom}
-            onChange={(e) => setInputUrlCustom(e.target.value)}
-            required
-          />
           <StyledButton type="submit" variant="contained" color="primary">
-            Shorten URL
+            Redirect
           </StyledButton>
         </form>
 
-        {shortenedUrl && (
+        {originalUrl && (
           <div
             style={{
               display: 'flex',
@@ -123,7 +104,7 @@ const UrlShortening = () => {
                   fontWeight: 'bold',
                 }}
               >
-                Shortened URL:
+                Original URL:
               </Typography>
               <div
                 style={{
@@ -135,19 +116,20 @@ const UrlShortening = () => {
                 }}
               >
                 <Typography component="div" variant="body1">
-                  {shortenedUrl}
+                  {originalUrl}
                 </Typography>
               </div>
             </div>
-            <CopyToClipboard text={shortenedUrl} onCopy={handleCopy}>
+            {/* <CopyToClipboard text={originalUrl} onCopy={handleOpen}> */}
               <Button
                 variant="outlined"
                 color="primary"
                 style={{ marginTop: '30px' }}
+                onClick={handleOpen}
               >
-                {isCopied ? 'Copied!' : 'Copy to Clipboard'}
+                CLICK TO OPEN
               </Button>
-            </CopyToClipboard>
+            {/* </CopyToClipboard> */}
           </div>
         )}
       </div>
@@ -155,4 +137,4 @@ const UrlShortening = () => {
   );
 };
 
-export default UrlShortening;
+export default RedirectUrl;

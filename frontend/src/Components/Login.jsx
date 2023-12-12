@@ -2,7 +2,7 @@
 import React, { useState } from 'react';
 import { Button, TextField, Typography } from '@mui/material';
 import { styled } from '@mui/system';
-import { useNavigate } from 'react-router-dom';
+
 
 const StyledContainer = styled('div')({
   display: 'flex',
@@ -25,8 +25,7 @@ const StyledButton = styled(Button)({
   display: 'block',
 });
 
-const Login = () => {
-  const navigate = useNavigate();
+const Login = () => { 
   const [formData, setFormData] = useState({
     email: '',
     password: '',
@@ -52,7 +51,7 @@ const Login = () => {
         alert('Login Success');
         console.log('Login successful:', data);
         localStorage.setItem('authToken', data.token);
-        window.location.href = '/url-shortening';
+        window.location.href = '/';
       } else {
         const errorData = await response.json();
         alert('Invalid Credentials');
