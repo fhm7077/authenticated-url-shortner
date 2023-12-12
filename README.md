@@ -8,7 +8,11 @@
   - [Modules](#modules)
     - [User](#user)
     - [URL](#url)
+  - [Database](#database)
   - [APIs](#apis)
+  - [Authentication](authentication)
+    - [JWT Authentication Guard](#jwt-authentication-guard)
+  - [URL Shortening](url-shortening)
 - [Frontend Development](#frontend-development)
   - [Technologies Used](#technologies-used-1)
   - [Implementation Details](#implementation-details)
@@ -18,7 +22,7 @@
     - [URL Management](#url-management)
     - [Styling](#styling)
     - [Interacting with the UI](#interacting-with-the-ui)
-  - [Special Considerations](#special-considerations)
+- [Special Considerations](#special-considerations)
     - [AI-Assisted Development Tool](#ai-assisted-development-tool)
 
 ## Introduction
@@ -76,6 +80,10 @@ This project is an authenticated URL shortener implemented using Nest.js for the
      - Endpoint: `GET /url/view-all`
      - Description: Allows users to view a list of URLs they have created. Uses user id from the JWT token for authentication.
 
+### Database
+- **Database:** MySQL (Local Server)
+- **ORM:** TypeORM
+  
 ### APIs
 - **User Module:**
   - Register: `POST /users/register`
@@ -91,6 +99,10 @@ This project is an authenticated URL shortener implemented using Nest.js for the
 
 ### Authentication
 The backend implements secure user registration, login, and logout routes. Passwords are securely stored in a hashed format. Token-based authentication is achieved using JWT, with tokens containing user id and name for various purposes. JWT is generated using the jsonwebtoken library, supporting algorithms like SHA256.
+
+#### JWT Authentication Guard
+
+The `JwtAuthGuard` class is responsible for protecting routes that require authentication. It implements the `CanActivate` interface from the Nest.js framework, allowing it to be used as a guard to control access to specific routes.
 
 ### URL Shortening
 The backend provides routes to create and retrieve shortened URLs, ensuring access is restricted to authenticated users. Shortening is implemented using custom hashing with SHA256. Mapped original and shortened URLs are stored in a MySQL database. Custom URL creation is supported, and validation prevents the creation of duplicate URLs.
